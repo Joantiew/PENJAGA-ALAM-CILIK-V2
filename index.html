@@ -895,6 +895,7 @@ function nextBtn(id){
  if(id==='bina')return '<button class="btn" data-act="jump" data-t="kuiz">Ke Misi 4 '+ico('next')+'</button>';
  var m={aksi:9,trans:11,tak:12,aktif:13,pasif:14,kuiz:15};
 return '<button class="btn" data-act="go" data-p="'+m[id]+'">'+(id==='kuiz'?'Ke Refleksi':'Seterusnya')+' '+ico('next')+'</button>';
+}
 function exRedraw(id){var b=$('[data-exbox="'+id+'"]');if(b)b.innerHTML=exHTML(id);}
 function mtTry(id,li,ri){
  var st=exSt(id),q=EXS[id].qs[st.i];if(st.chk||st.m[li])return;st.pk=null;
@@ -967,7 +968,7 @@ function chrome(){
  var nav=$('#nav');
  if(!has||cur===1){nav.classList.add('hide');}else{nav.classList.remove('hide');
   var nxt=cur<17?cur+1:null;
-  nav.innerHTML='<button class="btn alt sm" data-act="go" data-p="'+(cur-1)+'" '+(cur<=1?'disabled':'')+'>'+ico('back')+' Kembali</button><div class="mid">'<span>Halaman '+cur+' daripada 17</span><b>'+esc(PAGES[cur].t)+'</b></div>'+
+  nav.innerHTML='<button class="btn alt sm" data-act="go" data-p="'+(cur-1)+'" '+(cur<=1?'disabled':'')+'>'+ico('back')+' Kembali</button><div class="mid"><span>Halaman '+cur+' daripada 17</span><b>'+esc(PAGES[cur].t)+'</b></div>'+
   (nxt?'<button class="btn sm" data-act="go" data-p="'+nxt+'">Seterusnya '+ico('next')+'</button>':'<button class="btn sm" data-act="go" data-p="1">'+ico('home')+' Utama</button>');}
 }
 var tt;function toast(m){var t=$('#toast');t.textContent=m;t.classList.remove('hide');clearTimeout(tt);tt=setTimeout(function(){t.classList.add('hide');},3200);}
