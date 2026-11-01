@@ -455,8 +455,9 @@ var NODES=[
  {p:8,t:'Cari Kata Kerja',task:['cari','aksi']},
  {p:9,t:'Jenis Kata Kerja',task:['trans','tak','aktif','pasif']},
  {p:14,t:'Cabaran Akhir',task:['bina','kuiz']},
- {p:15,t:'Sijil Penjaga Alam',cert:true},
- {p:16,t:'Penutup'}
+ {p:15,t:'Refleksi Diri'},
+ {p:16,t:'Sijil Penjaga Alam',cert:true},
+ {p:17,t:'Penutup'}
 ];
 function nodeXY(i){return [i%2===0?330:150,118+i*118];}
 function certHTML(){
@@ -570,8 +571,20 @@ var EXS={
 
 /* ============ Keadaan ============ */
 var LS='pkpa-v1';
-var state={name:'',done:{},ex:{},ticks:{}};
-try{var raw=localStorage.getItem(LS);if(raw){var o=JSON.parse(raw);if(o&&typeof o==='object'){state.name=typeof o.name==='string'?o.name:'';state.done=o.done||{};state.ex=o.ex||{};state.ticks=o.ticks||{};}}}catch(e){}
+var state={name:'',done:{},ex:{},ticks:{},refleksi:null};
+try{
+ var raw=localStorage.getItem(LS);
+ if(raw){
+  var o=JSON.parse(raw);
+  if(o&&typeof o==='object'){
+   state.name=typeof o.name==='string'?o.name:'';
+   state.done=o.done||{};
+   state.ex=o.ex||{};
+   state.ticks=o.ticks||{};
+   state.refleksi=o.refleksi||null;
+  }
+ }
+}catch(e){}
 function save(){try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}}
 function doneCount(){return TASKS.filter(function(t){return state.done[t.id];}).length;}
 function allDone(){return doneCount()===TASKS.length;}
@@ -764,19 +777,47 @@ PAGES[14]={t:'Cabaran Akhir',html:function(){
  msec(3,'Cabaran Bina Ayat','Gunakan kata kerja untuk membina ayat yang betul. Isi, susun dan lengkapkan!','bina')+
  msec(4,'Selamatkan Hutan','Ini ujian terakhir. Gunakan semua yang kamu tahu untuk menyelamatkan hutan!','kuiz');
 }};
-PAGES[15]={t:'Sijil Pencapaian',html:function(){
+PAGES[15]={t:'Refleksi Diri',html:function(){
+ var r=state.refleksi;
+ var intro='<div class="pagehead"><span class="eyebrow">Halaman 15</span><h1>Refleksi Diri</h1><p>Jom lihat apa yang telah kamu pelajari! Pilih jawapan yang paling sesuai dengan diri kamu.</p></div>';
+ if(r){
+  return intro+'<div class="card"><h2>Ringkasan Refleksi Saya</h2>'+
+   '<p><b>Saya sudah belajar:</b></p><ul>'+r.learned.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>'+
+   '<p><b>Perasaan saya:</b> '+esc(r.feeling)+'</p>'+
+   '<p><b>Saya mahu:</b> '+esc(r.next)+'</p>'+
+   '<button class="btn alt" data-act="editReflection">Ubah Jawapan</button> '+
+   '<button class="btn" data-act="go" data-p="16">Ke Sijil Pencapaian</button></div>';
+ }
+ return intro+'<form id="reflectionForm" class="card">'+
+ '<h3>1. Saya sudah belajar:</h3>'+
+ '<label><input type="checkbox" name="learned" value="Mengenal kata kerja"> Mengenal kata kerja</label><br>'+
+ '<label><input type="checkbox" name="learned" value="Memilih kata kerja yang betul"> Memilih kata kerja yang betul</label><br>'+
+ '<label><input type="checkbox" name="learned" value="Membina ayat mudah"> Membina ayat mudah</label>'+
+ '<h3>2. Perasaan saya:</h3>'+
+ '<label><input type="radio" name="feeling" value="Seronok" required> Seronok!</label><br>'+
+ '<label><input type="radio" name="feeling" value="Saya faham"> Saya faham!</label><br>'+
+ '<label><input type="radio" name="feeling" value="Masih keliru"> Masih keliru.</label><br>'+
+ '<label><input type="radio" name="feeling" value="Perlu bantuan"> Perlu bantuan.</label>'+
+ '<h3>3. Saya mahu:</h3>'+
+ '<label><input type="radio" name="next" value="Belajar lagi" required> Belajar lagi!</label><br>'+
+ '<label><input type="radio" name="next" value="Membuat lebih banyak latihan"> Membuat lebih banyak latihan!</label><br>'+
+ '<label><input type="radio" name="next" value="Bertanya kepada guru"> Bertanya kepada guru!</label>'+
+ '<p id="reflectionErr" class="err"></p>'+
+ '<button class="btn big" type="submit">Hantar Refleksi</button></form>';
+}};
+PAGES[16]={t:'Sijil Pencapaian',html:function(){
  if(!allDone()){
   var pend=pendingTasks();
-  return '<div class="pagehead"><span class="eyebrow">Halaman 15</span><h1>Sijil Pencapaian</h1></div><div class="card stack" style="justify-items:center;text-align:center"><div style="color:var(--wood-l)"><svg class="ic" style="width:72px;height:72px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+I.lock+'</svg></div>'+
+  return '<div class="pagehead"><span class="eyebrow">Halaman 16</span><h1>Sijil Pencapaian</h1></div><div class="card stack" style="justify-items:center;text-align:center"><div style="color:var(--wood-l)"><svg class="ic" style="width:72px;height:72px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+I.lock+'</svg></div>'+
   '<h2>Sijil masih terkunci</h2><p class="lead">Siapkan semua misi dahulu. Tinggal '+pend.length+' misi lagi.</p><div class="row" style="justify-content:center">'+
   pend.map(function(t){return '<button class="btn alt" data-act="go" data-p="'+t.p+'">'+t.t+'</button>';}).join('')+'</div><p class="hint">Misi dianggap selesai selepas jawapan dihantar. Markah kuiz tidak menjadi syarat.</p></div>';
  }
- return '<div class="pagehead"><span class="eyebrow">Halaman 15</span><h1>Tahniah, '+esc(state.name)+'!</h1><p>Semua misi sudah selesai. Ini sijil kamu.</p></div><div class="stack">'+certHTML()+
+ return '<div class="pagehead"><span class="eyebrow">Halaman 16</span><h1>Tahniah, '+esc(state.name)+'!</h1><p>Semua misi sudah selesai. Ini sijil kamu.</p></div><div class="stack">'+certHTML()+
  '<div class="row" style="justify-content:center"><button class="btn big" data-act="print">'+ico('print')+' Cetak Sijil</button><button class="btn alt" data-act="go" data-p="16">Seterusnya '+ico('next')+'</button></div>'+
  '<div id="printMsg" class="note hide" role="status"></div><p class="hint" style="text-align:center">Sijil dicetak pada kertas A4 landscape. Pilih “Simpan sebagai PDF” jika mahu menyimpannya.</p></div>';
 }};
-PAGES[16]={t:'Penutup',html:function(){
- return '<div class="pagehead"><span class="eyebrow">Halaman 16</span><h1>Penutup</h1></div><div class="card two" style="align-items:center">'+art('meraikan')+'<div class="stack"><h2>Tahniah, Penjaga Alam Cilik'+(state.name?' '+esc(state.name):'')+'!</h2><p class="lead">Teruskan menggunakan kata kerja yang betul dan menjaga alam sekitar setiap hari.</p>'+
+PAGES[17]={t:'Penutup',html:function(){
+ return '<div class="pagehead"><span class="eyebrow">Halaman 17</span><h1>Penutup</h1></div><div class="card two" style="align-items:center">'+art('meraikan')+'<div class="stack"><h2>Tahniah, Penjaga Alam Cilik'+(state.name?' '+esc(state.name):'')+'!</h2><p class="lead">Teruskan menggunakan kata kerja yang betul dan menjaga alam sekitar setiap hari.</p>'+
  (doneCount()?'<div class="bdgrow" style="justify-content:flex-start">'+TASKS.filter(function(t){return state.done[t.id];}).map(function(t){return '<figure class="bdgf">'+badgeHTML(t.id,true)+'</figure>';}).join('')+'</div>':'')+'<div class="row"><button class="btn" data-act="go" data-p="1">'+ico('home')+' Laman Utama</button><button class="btn alt" data-act="askReset">'+ico('reload')+' Mulakan Semula</button>'+(allDone()?'<button class="btn alt" data-act="go" data-p="15">Lihat Sijil</button>':'')+'</div>'+
  '<div id="resetBox" class="note warn hide stack"><b>Padam semua kemajuan pada pelayar ini? Nama kamu akan kekal.</b><div class="row"><button class="btn sm" data-act="doReset">Ya, mulakan semula</button><button class="btn alt sm" data-act="cancelReset">Tidak</button></div></div></div></div>';
 }};
@@ -852,7 +893,8 @@ function exHTML(id){
 function nextBtn(id){
  if(id==='cari')return '<button class="btn" data-act="jump" data-t="aksi">Ke Misi 2 '+ico('next')+'</button>';
  if(id==='bina')return '<button class="btn" data-act="jump" data-t="kuiz">Ke Misi 4 '+ico('next')+'</button>';
- var m={aksi:9,trans:11,tak:12,aktif:13,pasif:14,kuiz:15};return '<button class="btn" data-act="go" data-p="'+m[id]+'">'+(id==='kuiz'?'Ke Sijil':'Seterusnya')+' '+ico('next')+'</button>';}
+ var m={aksi:9,trans:11,tak:12,aktif:13,pasif:14,kuiz:15};
+return '<button class="btn" data-act="go" data-p="'+m[id]+'">'+(id==='kuiz'?'Ke Refleksi':'Seterusnya')+' '+ico('next')+'</button>';
 function exRedraw(id){var b=$('[data-exbox="'+id+'"]');if(b)b.innerHTML=exHTML(id);}
 function mtTry(id,li,ri){
  var st=exSt(id),q=EXS[id].qs[st.i];if(st.chk||st.m[li])return;st.pk=null;
@@ -913,7 +955,7 @@ function render(){
  $('#view').innerHTML=PAGES[p].html();
  chrome();
  if(p===6||p===7)refreshAudio();
- if(p===15&&allDone())$('#printRoot').innerHTML=certHTML();
+ if(p===16&&allDone())$('#printRoot').innerHTML=certHTML();
  window.scrollTo(0,0);
  if(p===1){var i=$('#nama');if(i&&!state.name){try{i.focus({preventScroll:true});}catch(e){}}}
 }
@@ -924,8 +966,8 @@ function chrome(){
  '<div class="tb"><button class="tbtn" data-act="go" data-p="1" aria-label="Laman utama">'+ico('home')+'<span class="lbl">Utama</span></button><button class="tbtn" data-act="go" data-p="3" aria-label="Peta pengembaraan">'+ico('map')+'<span class="lbl">Peta</span></button><button class="tbtn" data-act="go" data-p="1" aria-label="Tukar nama">'+ico('edit')+'<span class="lbl who">'+esc(state.name)+'</span></button></div>':'');
  var nav=$('#nav');
  if(!has||cur===1){nav.classList.add('hide');}else{nav.classList.remove('hide');
-  var nxt=cur<16?cur+1:null;
-  nav.innerHTML='<button class="btn alt sm" data-act="go" data-p="'+(cur-1)+'" '+(cur<=1?'disabled':'')+'>'+ico('back')+' Kembali</button><div class="mid"><span>Halaman '+cur+' daripada 16</span><b>'+esc(PAGES[cur].t)+'</b></div>'+
+  var nxt=cur<17?cur+1:null;
+  nav.innerHTML='<button class="btn alt sm" data-act="go" data-p="'+(cur-1)+'" '+(cur<=1?'disabled':'')+'>'+ico('back')+' Kembali</button><div class="mid">'<span>Halaman '+cur+' daripada 17</span><b>'+esc(PAGES[cur].t)+'</b></div>'+
   (nxt?'<button class="btn sm" data-act="go" data-p="'+nxt+'">Seterusnya '+ico('next')+'</button>':'<button class="btn sm" data-act="go" data-p="1">'+ico('home')+' Utama</button>');}
 }
 var tt;function toast(m){var t=$('#toast');t.textContent=m;t.classList.remove('hide');clearTimeout(tt);tt=setTimeout(function(){t.classList.add('hide');},3200);}
@@ -961,9 +1003,29 @@ document.addEventListener('click',function(e){
  if(a==='askReset'){$('#resetBox').classList.remove('hide');return;}
  if(a==='cancelReset'){$('#resetBox').classList.add('hide');return;}
  if(a==='doReset'){state.done={};state.ex={};state.ticks={};save();go(3);return;}
+if(a==='editReflection'){state.refleksi=null;save();render();return;}
 });
 document.addEventListener('submit',function(e){
- if(e.target.id!=='loginForm')return;e.preventDefault();
+ if(e.target.id==='reflectionForm'){
+ e.preventDefault();
+ var learned=Array.from(e.target.querySelectorAll('input[name="learned"]:checked')).map(function(x){return x.value;});
+ var feeling=e.target.querySelector('input[name="feeling"]:checked');
+ var next=e.target.querySelector('input[name="next"]:checked');
+ if(!learned.length){
+  $('#reflectionErr').textContent='Sila pilih sekurang-kurangnya satu perkara yang telah kamu pelajari.';
+  return;
+ }
+ if(!feeling||!next){
+  $('#reflectionErr').textContent='Sila lengkapkan semua pilihan refleksi.';
+  return;
+ }
+ state.refleksi={learned:learned,feeling:feeling.value,next:next.value};
+ save();
+ render();
+ return;
+}
+if(e.target.id!=='loginForm')return;
+e.preventDefault();
  var v=$('#nama').value.replace(/[\u0000-\u001f\u007f]/g,'').replace(/\s+/g,' ').trim();
  if(!v){$('#nameErr').textContent='Sila taip nama kamu dahulu.';$('#nama').focus();return;}
  state.name=v.slice(0,30);save();go(2);
