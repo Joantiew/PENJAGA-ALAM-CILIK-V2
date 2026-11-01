@@ -788,7 +788,7 @@ PAGES[15]={t:'Refleksi Diri',html:function(){
    '<button class="btn alt" data-act="editReflection">Ubah Jawapan</button> '+
    '<button class="btn" data-act="go" data-p="16">Ke Sijil Pencapaian</button></div>';
  }
- return intro+'<form id="reflectionForm" class="card">'+
+ return intro+'<div class="two" style="align-items:start"><form id="reflectionForm" class="card" style="font-size:19px;line-height:1.8">'+
  '<h3>1. Saya sudah belajar:</h3>'+
  '<label><input type="checkbox" name="learned" value="Mengenal kata kerja"> Mengenal kata kerja</label><br>'+
  '<label><input type="checkbox" name="learned" value="Memilih kata kerja yang betul"> Memilih kata kerja yang betul</label><br>'+
@@ -803,7 +803,12 @@ PAGES[15]={t:'Refleksi Diri',html:function(){
  '<label><input type="radio" name="next" value="Membuat lebih banyak latihan"> Membuat lebih banyak latihan!</label><br>'+
  '<label><input type="radio" name="next" value="Bertanya kepada guru"> Bertanya kepada guru!</label>'+
  '<p id="reflectionErr" class="err"></p>'+
- '<button class="btn big" type="submit">Hantar Refleksi</button></form>';
+ '<button class="btn big" type="submit">Hantar Refleksi</button></form>'+
+'<div class="card soft stack" style="text-align:center;align-content:start">'+
+'<h3>🌳 Penjaga Alam Cilik</h3>'+
+'<img src="media/cilik.png" alt="Penjaga Alam Cilik" style="width:100%;max-width:380px;height:auto;border-radius:20px;display:block;margin:auto">'+
+'<p class="lead">Syabas! Kamu telah menyelesaikan pengembaraan menjaga alam bersama Aina dan Ali.</p>'+
+'<p>Teruskan amalan menjaga kebersihan dan menyayangi alam sekitar!</p></div></div>';
 }};
 PAGES[16]={t:'Sijil Pencapaian',html:function(){
  if(!allDone()){
