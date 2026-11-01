@@ -813,12 +813,12 @@ PAGES[16]={t:'Sijil Pencapaian',html:function(){
   pend.map(function(t){return '<button class="btn alt" data-act="go" data-p="'+t.p+'">'+t.t+'</button>';}).join('')+'</div><p class="hint">Misi dianggap selesai selepas jawapan dihantar. Markah kuiz tidak menjadi syarat.</p></div>';
  }
  return '<div class="pagehead"><span class="eyebrow">Halaman 16</span><h1>Tahniah, '+esc(state.name)+'!</h1><p>Semua misi sudah selesai. Ini sijil kamu.</p></div><div class="stack">'+certHTML()+
- '<div class="row" style="justify-content:center"><button class="btn big" data-act="print">'+ico('print')+' Cetak Sijil</button><button class="btn alt" data-act="go" data-p="16">Seterusnya '+ico('next')+'</button></div>'+
+ '<div class="row" style="justify-content:center"><button class="btn big" data-act="print">'+ico('print')+' Cetak Sijil</button><button class="btn alt" data-act="go" data-p="17">Seterusnya '+ico('next')+'</button></div>'+
  '<div id="printMsg" class="note hide" role="status"></div><p class="hint" style="text-align:center">Sijil dicetak pada kertas A4 landscape. Pilih “Simpan sebagai PDF” jika mahu menyimpannya.</p></div>';
 }};
 PAGES[17]={t:'Penutup',html:function(){
  return '<div class="pagehead"><span class="eyebrow">Halaman 17</span><h1>Penutup</h1></div><div class="card two" style="align-items:center">'+art('meraikan')+'<div class="stack"><h2>Tahniah, Penjaga Alam Cilik'+(state.name?' '+esc(state.name):'')+'!</h2><p class="lead">Teruskan menggunakan kata kerja yang betul dan menjaga alam sekitar setiap hari.</p>'+
- (doneCount()?'<div class="bdgrow" style="justify-content:flex-start">'+TASKS.filter(function(t){return state.done[t.id];}).map(function(t){return '<figure class="bdgf">'+badgeHTML(t.id,true)+'</figure>';}).join('')+'</div>':'')+'<div class="row"><button class="btn" data-act="go" data-p="1">'+ico('home')+' Laman Utama</button><button class="btn alt" data-act="askReset">'+ico('reload')+' Mulakan Semula</button>'+(allDone()?'<button class="btn alt" data-act="go" data-p="15">Lihat Sijil</button>':'')+'</div>'+
+ (doneCount()?'<div class="bdgrow" style="justify-content:flex-start">'+TASKS.filter(function(t){return state.done[t.id];}).map(function(t){return '<figure class="bdgf">'+badgeHTML(t.id,true)+'</figure>';}).join('')+'</div>':'')+'<div class="row"><button class="btn" data-act="go" data-p="1">'+ico('home')+' Laman Utama</button><button class="btn alt" data-act="askReset">'+ico('reload')+' Mulakan Semula</button>'+(allDone()?'<button class="btn alt" data-act="go" data-p="16">Lihat Sijil</button>':'')+'</div>'+
  '<div id="resetBox" class="note warn hide stack"><b>Padam semua kemajuan pada pelayar ini? Nama kamu akan kekal.</b><div class="row"><button class="btn sm" data-act="doReset">Ya, mulakan semula</button><button class="btn alt sm" data-act="cancelReset">Tidak</button></div></div></div></div>';
 }};
 
